@@ -2,9 +2,10 @@
   "name": "cronvert",
   "version": "0.0.0",
   "private": true,
+  "description": "Build, validate, and translate cron expressions with a live visual editor.",
+  "license": "MIT",
   "author": "OzenFern",
   "type": "module",
-  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
