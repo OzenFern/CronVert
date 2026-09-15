@@ -6,7 +6,7 @@ describe("formatCron", () => {
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
         month: { type: "any" },
-        dayOfWeek: { type: "any" }
+        dayOfWeek: { type: "any" },
       };
 
       expect(formatCron(parsedCron)).toBe("Every minute.");
@@ -18,7 +18,7 @@ describe("formatCron", () => {
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "any" },
         month: { type: "any" },
-        dayOfWeek: { type: "any" }
+        dayOfWeek: { type: "any" },
       };
 
       expect(formatCron(parsedCron)).toBe("At 2:30 PM every day.");
@@ -30,7 +30,7 @@ describe("formatCron", () => {
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "any" },
         month: { type: "any" },
-        dayOfWeek: { type: "range", start: 1, end: 5 }
+        dayOfWeek: { type: "range", start: 1, end: 5 },
       };
 
       expect(formatCron(parsedCron)).toBe("At 2:30 PM, Monday through Friday.");
@@ -42,7 +42,7 @@ describe("formatCron", () => {
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
         month: { type: "any" },
-        dayOfWeek: { type: "list", values: [1, 3, 5] }
+        dayOfWeek: { type: "list", values: [1, 3, 5] },
       };
 
       expect(formatCron(parsedCron)).toBe("At 9:00 AM, Monday, Wednesday, and Friday.");
@@ -54,7 +54,7 @@ describe("formatCron", () => {
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
         month: { type: "any" },
-        dayOfWeek: { type: "any" }
+        dayOfWeek: { type: "any" },
       };
 
       expect(formatCron(parsedCron)).toBe("Every 15 minutes.");
@@ -66,7 +66,7 @@ describe("formatCron", () => {
         hour: { type: "exact", value: 12 },
         dayOfMonth: { type: "exact", value: 15 },
         month: { type: "exact", value: 1 },
-        dayOfWeek: { type: "any" }
+        dayOfWeek: { type: "any" },
       };
 
       expect(formatCron(parsedCron)).toBe("At 12:00 PM on the 15th of January.");
@@ -81,14 +81,14 @@ describe("formatCron", () => {
       [12, "12 PM"],
       [13, "1 PM"],
       [14, "2 PM"],
-      [23, "11 PM"]
+      [23, "11 PM"],
     ])("hour %d converts to %s", (hour, expected) => {
       const parsedCron = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: hour },
         dayOfMonth: { type: "any" },
         month: { type: "any" },
-        dayOfWeek: { type: "any" }
+        dayOfWeek: { type: "any" },
       };
 
       expect(formatCron(parsedCron)).toContain(expected);
@@ -100,14 +100,14 @@ describe("formatCron", () => {
       [0, "00"],
       [5, "05"],
       [30, "30"],
-      [59, "59"]
+      [59, "59"],
     ])("minute %d formats as %s", (minute, expected) => {
       const parsedCron = {
         minute: { type: "exact", value: minute },
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "any" },
         month: { type: "any" },
-        dayOfWeek: { type: "any" }
+        dayOfWeek: { type: "any" },
       };
 
       expect(formatCron(parsedCron)).toContain(expected);
