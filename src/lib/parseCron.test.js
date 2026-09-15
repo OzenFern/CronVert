@@ -6,24 +6,24 @@ describe("parseCron", () => {
         value: {
           minute: {
             type: "exact",
-            value: 30
+            value: 30,
           },
           hour: {
             type: "exact",
-            value: 14
+            value: 14,
           },
           dayOfMonth: {
-            type: "any"
+            type: "any",
           },
           month: {
-            type: "any"
+            type: "any",
           },
           dayOfWeek: {
             type: "range",
             start: 1,
-            end: 5
-          }
-        }
+            end: 5,
+          },
+        },
       });
     });
 
@@ -32,21 +32,21 @@ describe("parseCron", () => {
         success: true,
         value: {
           minute: {
-            type: "any"
+            type: "any",
           },
           hour: {
-            type: "any"
+            type: "any",
           },
           dayOfMonth: {
-            type: "any"
+            type: "any",
           },
           month: {
-            type: "any"
+            type: "any",
           },
           dayOfWeek: {
-            type: "any"
-          }
-        }
+            type: "any",
+          },
+        },
       });
     });
 
@@ -56,23 +56,23 @@ describe("parseCron", () => {
         value: {
           minute: {
             type: "exact",
-            value: 0
+            value: 0,
           },
           hour: {
             type: "exact",
-            value: 9
+            value: 9,
           },
           dayOfMonth: {
-            type: "any"
+            type: "any",
           },
           month: {
-            type: "any"
+            type: "any",
           },
           dayOfWeek: {
             type: "list",
-            values: [1, 3, 5]
-          }
-        }
+            values: [1, 3, 5],
+          },
+        },
       });
     });
 
@@ -84,13 +84,13 @@ describe("parseCron", () => {
             type: "step",
             start: null,
             end: null,
-            step: 15
+            step: 15,
           },
           hour: { type: "any" },
           dayOfMonth: { type: "any" },
           month: { type: "any" },
-          dayOfWeek: { type: "any" }
-        }
+          dayOfWeek: { type: "any" },
+        },
       });
     });
 
@@ -102,13 +102,13 @@ describe("parseCron", () => {
             type: "step",
             start: 1,
             end: 10,
-            step: 2
+            step: 2,
           },
           hour: { type: "any" },
           dayOfMonth: { type: "any" },
           month: { type: "any" },
-          dayOfWeek: { type: "any" }
-        }
+          dayOfWeek: { type: "any" },
+        },
       });
     });
 
@@ -118,24 +118,24 @@ describe("parseCron", () => {
         value: {
           minute: {
             type: "exact",
-            value: 30
+            value: 30,
           },
           hour: {
             type: "exact",
-            value: 14
+            value: 14,
           },
           dayOfMonth: {
-            type: "any"
+            type: "any",
           },
           month: {
-            type: "any"
+            type: "any",
           },
           dayOfWeek: {
             type: "range",
             start: 1,
-            end: 5
-          }
-        }
+            end: 5,
+          },
+        },
       });
     });
   });
@@ -144,14 +144,14 @@ describe("parseCron", () => {
     test("fewer than 5 fields", () => {
       expect(() => parseCron("* * * *")).toThrow({
         success: false,
-        error: "fewer than 5 fields"
+        error: "fewer than 5 fields",
       });
     });
 
     test("more than 5 fields", () => {
       expect(() => parseCron("* * * * * *")).toThrow({
         success: false,
-        error: "more than 5 fields"
+        error: "more than 5 fields",
       });
     });
   });
@@ -160,35 +160,35 @@ describe("parseCron", () => {
     test("invalid minute value", () => {
       expect(() => parseCron("60 * * * *")).toThrow({
         success: false,
-        error: "invalid minute value"
-      } );
+        error: "invalid minute value",
+      });
     });
 
     test("invalid hour value", () => {
       expect(() => parseCron("* 24 * * *")).toThrow({
         success: false,
-        error: "invalid hour value"
+        error: "invalid hour value",
       });
     });
 
     test("invalid day-of-month value", () => {
       expect(() => parseCron("* * 32 * *")).toThrow({
         success: false,
-        error: "invalid day-of-month value"
+        error: "invalid day-of-month value",
       });
     });
 
     test("invalid month value", () => {
       expect(() => parseCron("* * * 13 *")).toThrow({
         success: false,
-        error: "invalid month value"
+        error: "invalid month value",
       });
     });
 
     test("invalid day-of-week value", () => {
       expect(() => parseCron("* * * * 8")).toThrow({
         success: false,
-        error: "invalid day-of-week value"
+        error: "invalid day-of-week value",
       });
     });
   });
