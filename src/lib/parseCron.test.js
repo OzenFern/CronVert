@@ -142,14 +142,14 @@ describe("parseCron", () => {
 
   describe("invalid field counts", () => {
     test("fewer than 5 fields", () => {
-      expect(() => parseCron("* * * *")).toThrow({
+      expect(() => parseCron("* * * *")).toEqual({
         success: false,
         error: "fewer than 5 fields",
       });
     });
 
     test("more than 5 fields", () => {
-      expect(() => parseCron("* * * * * *")).toThrow({
+      expect(() => parseCron("* * * * * *")).toEqual({
         success: false,
         error: "more than 5 fields",
       });
@@ -158,35 +158,35 @@ describe("parseCron", () => {
 
   describe("invalid field values", () => {
     test("invalid minute value", () => {
-      expect(() => parseCron("60 * * * *")).toThrow({
+      expect(() => parseCron("60 * * * *")).toEqual({
         success: false,
         error: "invalid minute value",
       });
     });
 
     test("invalid hour value", () => {
-      expect(() => parseCron("* 24 * * *")).toThrow({
+      expect(() => parseCron("* 24 * * *")).toEqual({
         success: false,
         error: "invalid hour value",
       });
     });
 
     test("invalid day-of-month value", () => {
-      expect(() => parseCron("* * 32 * *")).toThrow({
+      expect(() => parseCron("* * 32 * *")).toEqual({
         success: false,
         error: "invalid day-of-month value",
       });
     });
 
     test("invalid month value", () => {
-      expect(() => parseCron("* * * 13 *")).toThrow({
+      expect(() => parseCron("* * * 13 *")).toEqual({
         success: false,
         error: "invalid month value",
       });
     });
 
     test("invalid day-of-week value", () => {
-      expect(() => parseCron("* * * * 8")).toThrow({
+      expect(() => parseCron("* * * * 8")).toEqual({
         success: false,
         error: "invalid day-of-week value",
       });

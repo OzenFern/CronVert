@@ -38,21 +38,21 @@ describe("cronToText", () => {
 
   describe("error handling", () => {
     test("invalid CRON expression throws error", () => {
-      expect(() => cronToText("invalid")).toThrow({
+      expect(() => cronToText("invalid")).toEqual({
         success: false,
         error: "invalid CRON expression",
       });
     });
 
     test("invalid field values throw error", () => {
-      expect(() => cronToText("60 * * * *")).toThrow({
+      expect(() => cronToText("60 * * * *")).toEqual({
         success: false,
         error: "invalid field values",
       });
     });
 
     test("incorrect number of fields throws error", () => {
-      expect(() => cronToText("* * *")).toThrow({
+      expect(() => cronToText("* * *")).toEqual({
         success: false,
         error: "incorrect number of fields",
       });
