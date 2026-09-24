@@ -1,3 +1,5 @@
+import parseCron from "./parseCron.js";
+
 describe("parseCron", () => {
   describe("valid CRON expressions", () => {
     test("standard 5-field expression", () => {
@@ -142,14 +144,14 @@ describe("parseCron", () => {
 
   describe("invalid field counts", () => {
     test("fewer than 5 fields", () => {
-      expect(() => parseCron("* * * *")).toEqual({
+      expect(parseCron("* * * *")).toEqual({
         success: false,
         error: "fewer than 5 fields",
       });
     });
 
     test("more than 5 fields", () => {
-      expect(() => parseCron("* * * * * *")).toEqual({
+      expect(parseCron("* * * * * *")).toEqual({
         success: false,
         error: "more than 5 fields",
       });
@@ -172,7 +174,7 @@ describe("parseCron", () => {
     });
 
     test("invalid day-of-month value", () => {
-      expect(() => parseCron("* * 32 * *")).toEqual({
+      expect(parseCron("* * 32 * *")).toEqual({
         success: false,
         error: "invalid day-of-month value",
       });
@@ -186,7 +188,7 @@ describe("parseCron", () => {
     });
 
     test("invalid day-of-week value", () => {
-      expect(() => parseCron("* * * * 8")).toEqual({
+      expect(parseCron("* * * * 8")).toEqual({
         success: false,
         error: "invalid day-of-week value",
       });
