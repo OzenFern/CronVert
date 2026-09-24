@@ -146,51 +146,67 @@ describe("parseCron", () => {
     test("fewer than 5 fields", () => {
       expect(parseCron("* * * *")).toEqual({
         success: false,
-        error: "fewer than 5 fields",
+        error: {
+          message: "fewer than 5 fields",
+        },
       });
     });
 
     test("more than 5 fields", () => {
       expect(parseCron("* * * * * *")).toEqual({
         success: false,
-        error: "more than 5 fields",
+        error: {
+          message: "more than 5 fields",
+        },
       });
     });
   });
 
   describe("invalid field values", () => {
     test("invalid minute value", () => {
-      expect(() => parseCron("60 * * * *")).toEqual({
+      expect(parseCron("60 * * * *")).toEqual({
         success: false,
-        error: "invalid minute value",
+        error: {
+          message: "invalid minute value",
+          description: "value exceeds maximum",
+        },
       });
     });
 
     test("invalid hour value", () => {
-      expect(() => parseCron("* 24 * * *")).toEqual({
+      expect(parseCron("* 24 * * *")).toEqual({
         success: false,
-        error: "invalid hour value",
+        error: {
+          message: "invalid hour value",
+          description: "value exceeds maximum",
+        },
       });
     });
 
     test("invalid day-of-month value", () => {
       expect(parseCron("* * 32 * *")).toEqual({
         success: false,
-        error: "invalid day-of-month value",
+        error: {
+          message: "invalid day-of-month value",
+          description: "value exceeds maximum",
+        },
       });
     });
 
     test("invalid month value", () => {
-      expect(() => parseCron("* * * 13 *")).toEqual({
+      expect(parseCron("* * * 13 *")).toEqual({
         success: false,
-        error: "invalid month value",
+        error: {
+          message: "invalid month value",
+          description: "value exceeds maximum",
+        },
       });
     });
 
     test("invalid day-of-week value", () => {
       expect(parseCron("* * * * 8")).toEqual({
         success: false,
-        error: "invalid day-of-week value",
+        error: { message: "invalid day-of-week value", description: "value exceeds maximum" },
       });
     });
   });
