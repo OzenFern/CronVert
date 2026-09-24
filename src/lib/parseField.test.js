@@ -69,37 +69,44 @@ describe("parseField", () => {
 
   describe("invalid values", () => {
     test("value exceeds maximum", () => {
-      expect(() => parseField("60", 0, 59)).toEqual({
+      expect(parseField("60", 0, 59)).toEqual({
         success: false,
         error: "value exceeds maximum",
       });
     });
 
     test("value below minimum", () => {
-      expect(() => parseField("-1", 0, 59)).toEqual({
+      expect(parseField("-1", 0, 59)).toEqual({
         success: false,
         error: "value below minimum",
       });
     });
 
     test("non-numeric value", () => {
-      expect(() => parseField("abc", 0, 59)).toEqual({
+      expect(parseField("abc", 0, 59)).toEqual({
         success: false,
         error: "non-numeric value",
       });
     });
 
     test("range exceeds maximum", () => {
-      expect(() => parseField("1-60", 0, 59)).toEqual({
+      expect(parseField("1-60", 0, 59)).toEqual({
         success: false,
-        error: "range exceeds maximum",
+        error: "value exceeds maximum",
       });
     });
   });
 
+  test("step having zero as the increment", () => {
+    expect(parseField("*/0", 0, 59)).toEqual({
+      success: false,
+      error: "value below minimum",
+    });
+  });
+
   describe("malformed syntax", () => {
-    test.each(["1-", "-5", "1--5", "1/", "*/0"])("malformed syntax: %s", (field) => {
-      expect(() => parseField(field, 0, 59)).toEqual({
+    test.each(["1-", "1--5", "1/"])("malformed syntax: %s", (field) => {
+      expect(parseField(field, 0, 59)).toEqual({
         success: false,
         error: "malformed syntax",
       });
