@@ -6,7 +6,7 @@
 const formatSentence = (string) => {
   const str = string.trim();
   const firstLetter = str[0];
-  const suffix = str.endsWith(".") ? "": ".";
+  const suffix = str.endsWith(".") ? "" : ".";
   return firstLetter.toUpperCase() + str.slice(1) + suffix;
 };
 
