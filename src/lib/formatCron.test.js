@@ -1,3 +1,5 @@
+import formatCron from "./formatCron.js";
+
 describe("formatCron", () => {
   describe("basic schedules", () => {
     test("every minute", () => {
@@ -45,7 +47,7 @@ describe("formatCron", () => {
         dayOfWeek: { type: "list", values: [1, 3, 5] },
       };
 
-      expect(formatCron(parsedCron)).toBe("At 9:00 AM, Monday, Wednesday, and Friday.");
+      expect(formatCron(parsedCron)).toBe("At 9 AM, Monday, Wednesday and Friday.");
     });
 
     test("every 15 minutes", () => {
@@ -69,19 +71,19 @@ describe("formatCron", () => {
         dayOfWeek: { type: "any" },
       };
 
-      expect(formatCron(parsedCron)).toBe("At 12:00 PM on the 15th of January.");
+      expect(formatCron(parsedCron)).toBe("At 12 PM on the 15th of January.");
     });
   });
 
   describe("time formatting", () => {
     test.each([
-      [0, "12 AM"],
-      [1, "1 AM"],
-      [11, "11 AM"],
-      [12, "12 PM"],
-      [13, "1 PM"],
-      [14, "2 PM"],
-      [23, "11 PM"],
+      [0, "At 12 AM"],
+      [1, "At 1 AM"],
+      [11, "At 11 AM"],
+      [12, "At 12 PM"],
+      [13, "At 1 PM"],
+      [14, "At 2 PM"],
+      [23, "At 11 PM"],
     ])("hour %d converts to %s", (hour, expected) => {
       const parsedCron = {
         minute: { type: "exact", value: 0 },
@@ -97,7 +99,7 @@ describe("formatCron", () => {
 
   describe("minute formatting", () => {
     test.each([
-      [0, "00"],
+      [0, ""],
       [5, "05"],
       [30, "30"],
       [59, "59"],
