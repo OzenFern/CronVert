@@ -1,5 +1,6 @@
 import formatSentence from "./formatSentence.js";
 
+// Test the output and return type of the formatSentence function
 describe("Test Sentence conversion", () => {
   test.each([
     ["abc", "Abc."],
@@ -9,5 +10,6 @@ describe("Test Sentence conversion", () => {
     ["Tomorrow is 15th October.", "Tomorrow is 15th October."],
   ])("Input string:%s \n Converted sentence:%s", (string, sentence) => {
     expect(formatSentence(string)).toEqual(sentence);
+    expectTypeOf(formatSentence(string)).toBeString();
   });
 });
