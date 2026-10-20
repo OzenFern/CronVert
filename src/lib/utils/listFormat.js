@@ -6,7 +6,7 @@
  * @return {string}
  */
 const ListFormat = (list) => {
-  const listString = list.filter(item => item != null).map(String);
+  const listString = list.filter((item) => item != null).map(String);
   return new Intl.ListFormat("en-GB", { type: "conjunction", style: "long" }).format(listString);
 };
 
