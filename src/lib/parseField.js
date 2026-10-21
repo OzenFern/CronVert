@@ -40,7 +40,7 @@ const parseExact = (field, min, max) => {
 };
 
 /**
- * Parses the values separated by a list, validates them and returns all the values a array
+ * Parses the values separated by a list, validates them and returns all the values an array
  * @param field - The value of the field to parse
  * @param min - The minimum value the field can take
  * @param max - The maximum value the field can take
@@ -81,9 +81,10 @@ const parseList = (field, min, max) => {
  * @param field - The value of the field to parse
  * @param min - The minimum value the field can take
  * @param max - The maximum value the field can take
- * @return {{success: boolean, error: string}|{success: boolean, value: {type: string, start: number, end: number}}}
+ * @param normalize - A flag to change equal start and end to exact
+ * @return {{success: boolean, error: string}|{success: boolean, value: {type: string, start?: number, end?: number, value?:number}}}
  */
-const parseRange = (field, min, max) => {
+const parseRange = (field, min, max, normalize = true) => {
   if (!/^\d+-\d+$/.test(field)) {
     return {
       success: false,
@@ -102,6 +103,25 @@ const parseRange = (field, min, max) => {
   }
 
   const [start, end] = values;
+
+  // If start is greater than end, return an error
+  if (start > end) {
+    return {
+      success: false,
+      error: "invalid range",
+    };
+  }
+
+  // Return an exact object if start and end have same values
+  if (normalize && start === end) {
+    return {
+      success: true,
+      value: {
+        type: "exact",
+        value: start,
+      },
+    };
+  }
 
   return {
     success: true,
