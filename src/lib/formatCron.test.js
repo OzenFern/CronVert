@@ -217,6 +217,66 @@ describe("formatCron", () => {
 
       expect(formatCron(parsedCron)).toBe("At 9 AM, Friday through Sunday.");
     });
+
+    test("weekday list containing both 0 and 7 describes Sunday only once", () => {
+      const parsedCron = {
+        minute: { type: "exact", value: 0 },
+        hour: { type: "exact", value: 9 },
+        dayOfMonth: { type: "any" },
+        month: { type: "any" },
+        dayOfWeek: { type: "list", values: [0, 7] },
+      };
+
+      expect(formatCron(parsedCron)).toBe("At 9 AM, Sunday.");
+    });
+
+    test("weekday list containing 0,1,7 does not repeat Sunday", () => {
+      const parsedCron = {
+        minute: { type: "exact", value: 0 },
+        hour: { type: "exact", value: 9 },
+        dayOfMonth: { type: "any" },
+        month: { type: "any" },
+        dayOfWeek: { type: "list", values: [0, 1, 7] },
+      };
+
+      expect(formatCron(parsedCron)).toBe("At 9 AM, Sunday and Monday.");
+    });
+
+    test("weekday list containing only 7 formats as Sunday", () => {
+      const parsedCron = {
+        minute: { type: "exact", value: 0 },
+        hour: { type: "exact", value: 9 },
+        dayOfMonth: { type: "any" },
+        month: { type: "any" },
+        dayOfWeek: { type: "list", values: [7] },
+      };
+
+      expect(formatCron(parsedCron)).toBe("At 9 AM, Sunday.");
+    });
+
+    test("weekday range with no Sunday values retains expected output", () => {
+      const parsedCron = {
+        minute: { type: "exact", value: 0 },
+        hour: { type: "exact", value: 9 },
+        dayOfMonth: { type: "any" },
+        month: { type: "any" },
+        dayOfWeek: { type: "range", start: 1, end: 5 },
+      };
+
+      expect(formatCron(parsedCron)).toBe("At 9 AM, Monday through Friday.");
+    });
+
+    test("weekday list with no Sunday values retains expected output", () => {
+      const parsedCron = {
+        minute: { type: "exact", value: 0 },
+        hour: { type: "exact", value: 9 },
+        dayOfMonth: { type: "any" },
+        month: { type: "any" },
+        dayOfWeek: { type: "list", values: [1, 3, 5] },
+      };
+
+      expect(formatCron(parsedCron)).toBe("At 9 AM, Monday, Wednesday and Friday.");
+    });
   });
 
   describe("step formatting", () => {

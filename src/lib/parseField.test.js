@@ -214,6 +214,76 @@ describe("parseField", () => {
       });
     });
 
+    test("single-value range normalizes to exact value", () => {
+      expect(parseField("1-1", 0, 59)).toEqual({
+        success: true,
+        value: {
+          type: "exact",
+          value: 1,
+        },
+      });
+    });
+
+    test("single-value range at minimum boundary normalizes to exact", () => {
+      expect(parseField("0-0", 0, 59)).toEqual({
+        success: true,
+        value: {
+          type: "exact",
+          value: 0,
+        },
+      });
+    });
+
+    test("single-value range at maximum boundary normalizes to exact", () => {
+      expect(parseField("59-59", 0, 59)).toEqual({
+        success: true,
+        value: {
+          type: "exact",
+          value: 59,
+        },
+      });
+    });
+
+    test("range where start equals end normalizes to exact value", () => {
+      expect(parseField("5-5", 0, 59)).toEqual({
+        success: true,
+        value: {
+          type: "exact",
+          value: 5,
+        },
+      });
+    });
+
+    test("range where start is less than end parses successfully", () => {
+      expect(parseField("1-5", 0, 59)).toEqual({
+        success: true,
+        value: {
+          type: "range",
+          start: 1,
+          end: 5,
+        },
+      });
+      expect(parseField("10-25", 0, 59)).toEqual({
+        success: true,
+        value: {
+          type: "range",
+          start: 10,
+          end: 25,
+        },
+      });
+    });
+
+    test("descending range where start exceeds end is rejected", () => {
+      expect(parseField("5-1", 0, 59)).toEqual({
+        success: false,
+        error: "invalid range",
+      });
+      expect(parseField("20-10", 0, 59)).toEqual({
+        success: false,
+        error: "invalid range",
+      });
+    });
+
     test("step with maximum step value", () => {
       expect(parseField("*/59", 0, 59)).toEqual({
         success: true,
@@ -266,15 +336,10 @@ describe("parseField", () => {
       });
     });
 
-    test("step with range where start > end", () => {
+    test("step with range where start > end is rejected", () => {
       expect(parseField("10-5/2", 0, 59)).toEqual({
-        success: true,
-        value: {
-          type: "step",
-          start: 10,
-          end: 5,
-          step: 2,
-        },
+        success: false,
+        error: "invalid range",
       });
     });
 
@@ -388,6 +453,13 @@ describe("parseField", () => {
           start: 0,
           end: 7,
         },
+      });
+    });
+
+    test("day-of-week descending range is rejected", () => {
+      expect(parseField("7-0", 0, 7)).toEqual({
+        success: false,
+        error: "invalid range",
       });
     });
 
