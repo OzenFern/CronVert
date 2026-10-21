@@ -659,7 +659,7 @@ describe("parseCron", () => {
         value: {
           minute: { type: "exact", value: 30 },
           hour: { type: "exact", value: 14 },
-          dayOfMonth: { type: "range", start: 15, end: 15 },
+          dayOfMonth: { type: "exact", value: 15 },
           month: { type: "any" },
           dayOfWeek: { type: "any" },
         },
