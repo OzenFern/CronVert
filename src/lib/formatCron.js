@@ -131,7 +131,14 @@ const formatField = (field, fieldName, fn = String) => {
       return fn(field.value);
 
     case "range":
-      return `${fn(field.start)} through ${fn(field.end)}`;
+      // Fix formatting of 0-7 in weekday
+      // returning `Sunday through Sunday`
+      const startFormatted = fn(field.start);
+      const endFormatted = fn(field.end);
+      if (startFormatted === endFormatted) {
+        return startFormatted;
+      }
+      return `${startFormatted} through ${endFormatted}`;
 
     case "list":
       return listJoin(field.values.map((value) => fn(value)));
