@@ -277,6 +277,18 @@ describe("formatCron", () => {
 
       expect(formatCron(parsedCron)).toBe("At 9 AM, Monday, Wednesday and Friday.");
     });
+
+    test("weekday range 0-7 (full week) deduplicates to Sunday", () => {
+      const parsedCron = {
+        minute: { type: "exact", value: 0 },
+        hour: { type: "exact", value: 9 },
+        dayOfMonth: { type: "any" },
+        month: { type: "any" },
+        dayOfWeek: { type: "range", start: 0, end: 7 },
+      };
+
+      expect(formatCron(parsedCron)).toBe("At 9 AM, Sunday.");
+    });
   });
 
   describe("step formatting", () => {
