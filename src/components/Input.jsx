@@ -13,9 +13,9 @@ const Input = ({ baseValue, fn, helperMessage }) => (
     />
     {helperMessage && (
       // Use grid-rows to make drop down animation
-      <div className="grid grid-rows-[0fr] opacity-0 transition-all delay-300 ease-in-out peer-focus:grid-rows-[1fr] peer-focus:opacity-100">
+      <div className="grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity] delay-300 duration-300 ease-in-out peer-focus:grid-rows-[1fr] peer-focus:opacity-100">
         {/* Use overflow: hidden in span for proper animation of text while being hidden */}
-        <span className="ml-1 overflow-hidden text-sm font-light text-accent-hover/50">
+        <span className="ml-1 min-h-0 overflow-hidden text-sm font-light text-accent-hover/50">
           {helperMessage}
         </span>
       </div>
