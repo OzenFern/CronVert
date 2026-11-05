@@ -4,7 +4,7 @@ const Input = ({ baseValue, fn, helperMessage }) => {
   const inputId = useId();
 
   return (
-    <div className="@container flex flex-col rounded-lg p-2 outline-accent focus-within:outline-3">
+    <div className="@container flex flex-col rounded-lg p-2 outline-1 outline-accent-hover focus-within:outline-3 focus-within:outline-accent">
       <input
         id={inputId}
         type="text"
