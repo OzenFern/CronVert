@@ -7,7 +7,6 @@ const Input = ({ baseValue, fn, helperMessage }) => (
       id={useContext(LabelContext)}
       type="text"
       onChange={fn}
-      autoFocus={true}
       defaultValue={baseValue}
       placeholder={"Type here..."}
       className="peer mt-1 mb-0.5 rounded-md px-1.5 text-center font-mono text-base font-semibold wrap-anywhere focus:outline-none @sm:text-lg @md:rounded-lg @md:text-xl"
