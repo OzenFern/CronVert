@@ -1,5 +1,5 @@
 import Header from "./components/Header.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import cronToText from "./lib/cronToText.js";
 import Input from "./components/Input.jsx";
 import LabelContainer from "./components/LabelContainer.jsx";
@@ -12,8 +12,13 @@ import Footer from "./components/Footer.jsx";
 const initialCron = "*/15 * * * *";
 
 const App = () => {
-  const [cron, setCron] = useState(initialCron);
+  const [cron, setCron] = useState(() => localStorage.getItem("cron") ?? initialCron);
   const result = cronToText(cron);
+
+  // Save the current cron into localStorage
+  useEffect(() => {
+    localStorage.setItem("cron", cron);
+  }, [cron]);
 
   let description = null;
   let errorDescription = null;
