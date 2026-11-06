@@ -3,35 +3,54 @@
 @theme {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
+  --color-surface-hover: color-mix(in oklab, var(--color-surface), var(--text) 4%);
+
   --color-text: var(--text);
   --color-text-muted: var(--text-muted);
-  --color-border: var(--border);
+
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-active: var(--accent-active);
+
   --color-success: var(--success);
   --color-error: var(--error);
+
+  --color-border: var(--border);
+  --color-shadow: var(--shadow);
 }
 
 :root {
   --bg: oklch(0.98 0.004 250);
   --surface: oklch(0.94 0.006 250);
+
   --text: oklch(0.22 0.02 250);
   --text-muted: oklch(0.52 0.02 250);
-  --border: oklch(0.88 0.008 250);
+
   --accent: oklch(0.75 0.16 70);
-  --accent-hover: oklch(0.68 0.17 70);
+  --accent-hover: oklch(0.6 0.18 70);
+  --accent-active: oklch(0.52 0.18 70);
+
   --success: oklch(0.65 0.12 170);
   --error: oklch(0.6 0.19 25);
+
+  --border: oklch(0.88 0.008 250);
+  --shadow: oklch(0.6 0.02 250);
 }
 
 .dark {
   --bg: oklch(0.16 0.01 250);
   --surface: oklch(0.22 0.012 250);
+
   --text: oklch(0.93 0.01 250);
   --text-muted: oklch(0.68 0.015 250);
-  --border: oklch(0.32 0.012 250);
-  --accent: oklch(0.78 0.15 70);
-  --accent-hover: oklch(0.83 0.15 70);
+
+  --accent: oklch(0.75 0.16 70);
+  --accent-hover: oklch(0.9 0.14 70);
+  --accent-active: oklch(0.96 0.08 70);
+
   --success: oklch(0.7 0.11 170);
   --error: oklch(0.68 0.18 25);
+
+  --border: oklch(0.32 0.012 250);
+  --shadow: oklch(0.3 0 0);
 }
