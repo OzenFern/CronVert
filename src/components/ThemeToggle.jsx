@@ -15,9 +15,10 @@ const ThemeToggle = () => {
   }, [theme]);
 
   return (
-    <Button click={() => setTheme(theme === "dark" ? "light" : "dark")}>
-      {theme === "dark" ? <Moon /> : <Sun />}
-    </Button>
+    <Button
+      click={() => setTheme(theme === "dark" ? "light" : "dark")}
+      icon={theme === "dark" ? <Moon /> : <Sun />}
+    ></Button>
   );
 };
 
