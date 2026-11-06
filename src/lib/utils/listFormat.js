@@ -5,10 +5,12 @@
  * @param list The list to format
  * @return {string}
  */
+const LIST_FORMAT = new Intl.ListFormat("en-GB", { type: "conjunction", style: "long" });
+
 const ListFormat = (list) => {
   const listString = list.filter((item) => item != null).map(String);
   const uniqueList = [...new Set(listString)];
-  return new Intl.ListFormat("en-GB", { type: "conjunction", style: "long" }).format(uniqueList);
+  return LIST_FORMAT.format(uniqueList);
 };
 
 export default ListFormat;
