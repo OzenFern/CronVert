@@ -1,6 +1,6 @@
 {
   "name": "cronvert",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Build, validate, and translate cron expressions with a live visual editor.",
   "license": "MIT",
