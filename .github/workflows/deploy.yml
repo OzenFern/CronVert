@@ -1,14 +1,15 @@
 name: Deploy CronVert
 
-# Trigger deployment on pushes to main
+# Deploy only after the "Test & Build CI" workflow (nodejs.yml) succeeds on main
 on:
-  push:
+  workflow_run:
+    workflows: ["Test & Build CI"]
+    types: [completed]
     branches: [main]
 
   # Allow manual deployment
   workflow_dispatch:
 
-# Permissions required for GitHub Pages
 permissions:
   contents: read
   pages: write
@@ -23,14 +24,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    # Only deploy when triggered by a successful CI run on main
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      # Get the repository contents
+      # Get the repository contents at the commit that passed CI
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       # Install Node.js
       - name: Setup Node.js
