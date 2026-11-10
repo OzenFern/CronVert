@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Button from "./Button.jsx";
+import Button from "./Button.tsx";
 import { Moon, Sun } from "lucide-react";
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState(() => localStorage.getItem("theme") ?? "dark");
+  const [theme, setTheme] = useState((): string => localStorage.getItem("theme") ?? "dark");
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -17,7 +17,7 @@ const ThemeToggle = () => {
   return (
     <Button
       click={() => setTheme(theme === "dark" ? "light" : "dark")}
-      icon={theme === "dark" ? <Moon /> : <Sun />}
+      icon={theme === "dark" ? Moon : Sun}
     ></Button>
   );
 };

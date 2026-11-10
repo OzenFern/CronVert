@@ -1,4 +1,6 @@
-const GitHub = (props) => (
+import type { SVGProps } from "react";
+
+const GitHub = (props: SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 98 96"
     fill="none"

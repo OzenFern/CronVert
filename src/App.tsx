@@ -1,18 +1,18 @@
-import Header from "./components/Header.jsx";
+import Header from "./components/Header.tsx";
 import { useEffect, useState } from "react";
-import cronToText from "./lib/cronToText.js";
-import Input from "./components/Input.jsx";
-import LabelContainer from "./components/LabelContainer.jsx";
-import ResultBlock from "./components/ResultBlock.jsx";
-import Button from "./components/Button.jsx";
+import cronToText from "./lib/cronToText.ts";
+import Input from "./components/Input.tsx";
+import LabelContainer from "./components/LabelContainer.tsx";
+import ResultBlock from "./components/ResultBlock.tsx";
+import Button from "./components/Button.tsx";
 import { RotateCcw, CircleX, CircleCheck } from "lucide-react";
-import CopyButton from "./components/CopyButton.jsx";
-import Footer from "./components/Footer.jsx";
+import CopyButton from "./components/CopyButton.tsx";
+import Footer from "./components/Footer.tsx";
 
 const initialCron = "*/15 * * * *";
 
 const App = () => {
-  const [cron, setCron] = useState(() => localStorage.getItem("cron") ?? initialCron);
+  const [cron, setCron] = useState((): string => localStorage.getItem("cron") ?? initialCron);
   const result = cronToText(cron);
 
   // Save the current cron into localStorage
@@ -20,14 +20,8 @@ const App = () => {
     localStorage.setItem("cron", cron);
   }, [cron]);
 
-  let description = null;
-  let errorDescription = null;
-
-  if (result.success) {
-    description = result.value;
-  } else {
-    errorDescription = result.error;
-  }
+  const text = result.success ? result.value : result.error.message;
+  const description = result.success ? null : result.error.description;
 
   return (
     <div className="grid min-h-dvh grid-rows-[auto_1fr_auto]">
@@ -47,16 +41,16 @@ const App = () => {
           textColor={result.success ? "text-success" : "text-error"}
         >
           <ResultBlock
-            text={description ?? errorDescription?.message}
-            description={errorDescription?.description}
-            icon={result.success ? <CircleCheck /> : <CircleX />}
+            text={text}
+            description={description}
+            icon={result.success ? CircleCheck : CircleX}
           />
         </LabelContainer>
         <div className="mt-2 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <CopyButton text="Description" toCopy={description} />
+          <CopyButton text="Description" toCopy={text} />
           <Button
             text="Reset Cron"
-            icon={<RotateCcw />}
+            icon={RotateCcw}
             click={() => setCron(initialCron)}
             bgColor="bg-accent-active"
           />

@@ -1,6 +1,6 @@
-import Logo from "./Logo.jsx";
-import TitleGroup from "./TitleGroup.jsx";
-import ThemeToggle from "./ThemeToggle.jsx";
+import Logo from "./Logo.tsx";
+import TitleGroup from "./TitleGroup.tsx";
+import ThemeToggle from "./ThemeToggle.tsx";
 
 const Brand = () => (
   <div className="flex cursor-pointer items-center gap-4 p-4 font-bold text-accent transition-colors duration-250 ease-in-out hover:text-accent/85">

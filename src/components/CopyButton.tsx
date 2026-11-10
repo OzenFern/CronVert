@@ -1,10 +1,18 @@
-import Button from "./Button.jsx";
-import { useState } from "react";
+import Button from "./Button.tsx";
+import { useEffect, useRef, useState } from "react";
 import { CheckCheck, Copy } from "lucide-react";
 
-const CopyButton = ({ text, toCopy }) => {
+type CopyButtonProps = {
+  text: string;
+  toCopy?: string | null;
+};
+
+const CopyButton = ({ text, toCopy }: CopyButtonProps) => {
   const isDisabled = toCopy == null;
   const [isCopied, setCopied] = useState(false);
+
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timerRef.current), []);
 
   const handleCopy = async () => {
     if (isDisabled) {
@@ -14,10 +22,10 @@ const CopyButton = ({ text, toCopy }) => {
     try {
       await navigator.clipboard.writeText(toCopy);
       setCopied(true);
-
-      setTimeout(() => setCopied(false), 2000); // Reset Copy feedback
+      clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch (e) {
-      console.error("Failed to copy: " + e);
+      console.error("Failed to copy: ", e);
     }
   };
 
@@ -26,7 +34,7 @@ const CopyButton = ({ text, toCopy }) => {
       click={handleCopy}
       isDisabled={isDisabled}
       bgColor={isDisabled ? "bg-text-muted" : null}
-      icon={isCopied ? <CheckCheck /> : <Copy />}
+      icon={isCopied ? CheckCheck : Copy}
       text={isCopied ? "Copied to Clipboard!" : `Copy ${text}`}
     />
   );

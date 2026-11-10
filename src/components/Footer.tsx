@@ -1,6 +1,6 @@
 import { Heart } from "lucide-react";
-import Anchor from "./Anchor.jsx";
-import GitHub from "./icons/GitHub.jsx";
+import Anchor from "./Anchor.tsx";
+import GitHub from "./icons/GitHub.tsx";
 
 const CURRENT_YEAR = new Date().getFullYear();
 

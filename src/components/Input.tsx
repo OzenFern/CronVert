@@ -1,7 +1,13 @@
-import { useContext } from "react";
-import { LabelContext } from "./LabelContainer.jsx";
+import { type ChangeEvent, useContext } from "react";
+import { LabelContext } from "./LabelContainer.tsx";
 
-const Input = ({ baseValue, fn, helperMessage }) => (
+type InputProps = {
+  baseValue: string;
+  fn: (e: ChangeEvent<HTMLInputElement>) => void;
+  helperMessage?: string;
+};
+
+const Input = ({ baseValue, fn, helperMessage }: InputProps) => (
   <div className="@container flex flex-col rounded-lg p-2 outline-1 outline-accent-hover focus-within:outline-3 focus-within:outline-accent">
     <input
       id={useContext(LabelContext)}

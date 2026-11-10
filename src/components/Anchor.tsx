@@ -1,4 +1,13 @@
-const Anchor = ({ url, children, ariaLabel, linkColour }) => (
+import type { ReactNode } from "react";
+
+type AnchorProps = {
+  url: string;
+  children: ReactNode;
+  ariaLabel: string;
+  linkColour: string;
+};
+
+const Anchor = ({ url, children, ariaLabel, linkColour }: AnchorProps) => (
   <a
     href={url}
     target="_blank"

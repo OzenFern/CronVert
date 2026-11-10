@@ -1,8 +1,14 @@
-import { createContext, useId } from "react";
+import { createContext, type ReactNode, useId } from "react";
 
-const LabelContext = createContext(null);
+type LabelContainerProps = {
+  textColor?: string | null;
+  label: string;
+  children: ReactNode;
+};
 
-const LabelContainer = ({ textColor, label, children }) => {
+const LabelContext = createContext<string | undefined>(undefined);
+
+const LabelContainer = ({ textColor, label, children }: LabelContainerProps) => {
   const id = useId();
   return (
     <div
