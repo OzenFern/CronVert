@@ -277,11 +277,11 @@ describe("parseField", () => {
     test("descending range where start exceeds end is rejected", () => {
       expect(parseField("5-1", 0, 59)).toEqual({
         success: false,
-        error: "invalid range",
+        error: "start value cannot be greater than end",
       });
       expect(parseField("20-10", 0, 59)).toEqual({
         success: false,
-        error: "invalid range",
+        error: "start value cannot be greater than end",
       });
     });
 
@@ -340,7 +340,7 @@ describe("parseField", () => {
     test("step with range where start > end is rejected", () => {
       expect(parseField("10-5/2", 0, 59)).toEqual({
         success: false,
-        error: "invalid range",
+        error: "start value cannot be greater than end",
       });
     });
 
@@ -460,7 +460,7 @@ describe("parseField", () => {
     test("day-of-week descending range is rejected", () => {
       expect(parseField("7-0", 0, 7)).toEqual({
         success: false,
-        error: "invalid range",
+        error: "start value cannot be greater than end",
       });
     });
 

@@ -1,11 +1,50 @@
+type ParseSuccess<T> = {
+  success: true;
+  value: T;
+};
+
+type ParseError = {
+  success: false;
+  error: string;
+};
+
+type ParseResult<T extends CronField> = ParseSuccess<T> | ParseError;
+
+type Exact = {
+  type: "exact";
+  value: number;
+};
+
+type List = {
+  type: "list";
+  values: number[];
+};
+
+type Range = {
+  type: "range";
+  start: number;
+  end: number;
+};
+
+type Step = {
+  type: "step";
+  start: null | number;
+  end: null | number;
+  step: number;
+};
+
+type Any = { type: "any" };
+
+type CronField = Any | Exact | List | Step | Range;
+
 /**
  * Returns the exact value of field while also checking for constraint violation of type and range
  * @param field - The value of the field to parse
  * @param min - The minimum value the field can take
  * @param max - The maximum value the field can take
- * @return {{success: boolean, error: string}|{success: boolean, value: {type: string, value: number}}}
+ * @return {ParseResult<Exact>}
  */
-const parseExact = (field, min, max) => {
+const parseExact = (field: string, min: number, max: number): ParseResult<Exact> => {
   // Strictly check for integers in the field
   if (!/^-?\d+$/.test(field)) {
     return {
@@ -44,9 +83,9 @@ const parseExact = (field, min, max) => {
  * @param field - The value of the field to parse
  * @param min - The minimum value the field can take
  * @param max - The maximum value the field can take
- * @return {{success: boolean, error: string}|{success: boolean, value: {type: string, value: array}}}
+ * @return {ParseResult<List>}
  */
-const parseList = (field, min, max) => {
+const parseList = (field: string, min: number, max: number): ParseResult<List> => {
   if (!/^\d+(,\d+)+$/.test(field)) {
     return {
       success: false,
@@ -55,13 +94,12 @@ const parseList = (field, min, max) => {
   }
 
   // Spilt the string and validate each one
-  const values = [];
+  const values: number[] = [];
   for (const value of field.split(",")) {
     const result = parseExact(value, min, max);
     if (!result.success) {
       return result;
     }
-
     // Add the numeric value to the values array
     values.push(result.value.value);
   }
@@ -81,10 +119,9 @@ const parseList = (field, min, max) => {
  * @param field - The value of the field to parse
  * @param min - The minimum value the field can take
  * @param max - The maximum value the field can take
- * @param normalize - A flag to change equal start and end to exact
- * @return {{success: boolean, error: string}|{success: boolean, value: {type: string, start?: number, end?: number, value?:number}}}
+ * @return {ParseResult<Range>}
  */
-const parseRange = (field, min, max, normalize = true) => {
+const parseRange = (field: string, min: number, max: number): ParseResult<Range> => {
   if (!/^\d+-\d+$/.test(field)) {
     return {
       success: false,
@@ -92,7 +129,7 @@ const parseRange = (field, min, max, normalize = true) => {
     };
   }
 
-  const values = [];
+  const values: number[] = [];
   for (const value of field.split("-")) {
     const result = parseExact(value, min, max);
     if (!result.success) {
@@ -108,18 +145,7 @@ const parseRange = (field, min, max, normalize = true) => {
   if (start > end) {
     return {
       success: false,
-      error: "invalid range",
-    };
-  }
-
-  // Return an exact object if start and end have same values
-  if (normalize && start === end) {
-    return {
-      success: true,
-      value: {
-        type: "exact",
-        value: start,
-      },
+      error: "start value cannot be greater than end",
     };
   }
 
@@ -138,9 +164,9 @@ const parseRange = (field, min, max, normalize = true) => {
  * @param field - The value of the field to parse
  * @param min - The minimum value the field can take
  * @param max - The maximum value the field can take
- * @return {{success: boolean, error: string}|{success: boolean, value: {type: string, start: number|null, end: number|null, step:number}}}
+ * @return {ParseResult<Step>}
  */
-const parseStep = (field, min, max) => {
+const parseStep = (field: string, min: number, max: number): ParseResult<Step> => {
   if (!/^(?:\*|\d+-\d+)\/\d+$/.test(field)) {
     return {
       success: false,
@@ -148,26 +174,26 @@ const parseStep = (field, min, max) => {
     };
   }
 
-  const [base, step] = field.split("/");
+  const [base, rawStep] = field.split("/");
 
   // The step should always be a positive integer
-  const result = parseExact(step, 1, max);
+  const result = parseExact(rawStep, 1, max);
   if (!result.success) {
     return result;
   }
-  // Prepare a return object with value of step
-  const returnObj = {
-    success: true,
-    value: {
-      type: "step",
-      start: null,
-      end: null,
-      step: result.value.value,
-    },
-  };
+
+  const step = result.value.value;
 
   if (base === "*") {
-    return returnObj;
+    return {
+      success: true,
+      value: {
+        type: "step",
+        start: null,
+        end: null,
+        step,
+      },
+    };
   }
 
   const range = parseRange(base, min, max);
@@ -176,7 +202,15 @@ const parseStep = (field, min, max) => {
   }
 
   const { start, end } = range.value;
-  return { ...returnObj, value: { ...returnObj.value, start, end } };
+  return {
+    success: true,
+    value: {
+      type: "step",
+      start,
+      end,
+      step,
+    },
+  };
 };
 
 /**
@@ -185,7 +219,7 @@ const parseStep = (field, min, max) => {
  * @param min - The minimum value the field can take
  * @param max - The maximum value the field can take
  */
-const parseField = (field, min, max) => {
+const parseField = (field: string, min: number, max: number): ParseResult<CronField> => {
   //   Check if the field is any wildcard
   if (field === "*") {
     return { success: true, value: { type: "any" } };
@@ -208,7 +242,25 @@ const parseField = (field, min, max) => {
 
   //   Check if field is a range
   if (field.includes("-")) {
-    return parseRange(field, min, max);
+    const result = parseRange(field, min, max);
+
+    if (!result.success) {
+      return result;
+    }
+
+    const { start, end } = result.value;
+
+    if (start === end) {
+      return {
+        success: true,
+        value: {
+          type: "exact",
+          value: start,
+        },
+      };
+    }
+
+    return result;
   }
 
   // Return as error object for non - numeric field
@@ -219,3 +271,4 @@ const parseField = (field, min, max) => {
 };
 
 export default parseField;
+export type { CronField };
