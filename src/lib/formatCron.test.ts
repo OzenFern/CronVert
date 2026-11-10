@@ -1,10 +1,11 @@
 import formatCron from "./formatCron.ts";
 import { describe, test, expect } from "vite-plus/test";
+import type { CronObject } from "./parseCron.ts";
 
 describe("formatCron", () => {
   describe("basic schedules", () => {
     test("every minute", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "any" },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -16,7 +17,7 @@ describe("formatCron", () => {
     });
 
     test("exact time every day", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 30 },
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "any" },
@@ -28,7 +29,7 @@ describe("formatCron", () => {
     });
 
     test("weekday schedule with range", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 30 },
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "any" },
@@ -40,7 +41,7 @@ describe("formatCron", () => {
     });
 
     test("list of weekdays", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -52,7 +53,7 @@ describe("formatCron", () => {
     });
 
     test("every 15 minutes", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "step", start: null, end: null, step: 15 },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -64,7 +65,7 @@ describe("formatCron", () => {
     });
 
     test("exact date and month", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 12 },
         dayOfMonth: { type: "exact", value: 15 },
@@ -86,7 +87,7 @@ describe("formatCron", () => {
       [14, "At 2 PM"],
       [23, "At 11 PM"],
     ])("hour %d converts to %s", (hour, expected) => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: hour },
         dayOfMonth: { type: "any" },
@@ -108,7 +109,7 @@ describe("formatCron", () => {
       [30, "At 2:30 PM"],
       [59, "At 2:59 PM"],
     ])("minute %d formats correctly", (minute, expected) => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: minute },
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "any" },
@@ -134,7 +135,7 @@ describe("formatCron", () => {
       [23, "23rd"],
       [31, "31st"],
     ])("day %d uses the correct ordinal suffix", (day, ordinal) => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "exact", value: day },
@@ -146,7 +147,7 @@ describe("formatCron", () => {
     });
 
     test("exact day without a month means every month", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "exact", value: 15 },
@@ -165,7 +166,7 @@ describe("formatCron", () => {
       [6, "June"],
       [12, "December"],
     ])("month %d formats as %s", (month, monthName) => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -177,7 +178,7 @@ describe("formatCron", () => {
     });
 
     test("month list formats naturally", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -196,7 +197,7 @@ describe("formatCron", () => {
       [6, "Saturday"],
       [7, "Sunday"],
     ])("weekday value %d formats as %s", (day, dayName) => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -208,7 +209,7 @@ describe("formatCron", () => {
     });
 
     test("weekday range ending at 7 handles Sunday correctly", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -220,7 +221,7 @@ describe("formatCron", () => {
     });
 
     test("weekday list containing both 0 and 7 describes Sunday only once", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -232,7 +233,7 @@ describe("formatCron", () => {
     });
 
     test("weekday list containing 0,1,7 does not repeat Sunday", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -244,7 +245,7 @@ describe("formatCron", () => {
     });
 
     test("weekday list containing only 7 formats as Sunday", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -256,7 +257,7 @@ describe("formatCron", () => {
     });
 
     test("weekday range with no Sunday values retains expected output", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -268,7 +269,7 @@ describe("formatCron", () => {
     });
 
     test("weekday list with no Sunday values retains expected output", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -280,7 +281,7 @@ describe("formatCron", () => {
     });
 
     test("weekday range 0-7 (full week) deduplicates to Sunday", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -299,7 +300,7 @@ describe("formatCron", () => {
       [15, "Every 15 minutes."],
       [30, "Every 30 minutes."],
     ])("every %d minutes formats correctly", (step, expected) => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "step", start: null, end: null, step },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -311,7 +312,7 @@ describe("formatCron", () => {
     });
 
     test("step with an explicit range includes its boundaries", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "step", start: 0, end: 30, step: 10 },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -326,7 +327,7 @@ describe("formatCron", () => {
 
   describe("range formatting", () => {
     test("minute range", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "range", start: 0, end: 30 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -338,7 +339,7 @@ describe("formatCron", () => {
     });
 
     test("hour range", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "range", start: 9, end: 17 },
         dayOfMonth: { type: "any" },
@@ -350,7 +351,7 @@ describe("formatCron", () => {
     });
 
     test("day of month range", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "range", start: 1, end: 15 },
@@ -362,7 +363,7 @@ describe("formatCron", () => {
     });
 
     test("month range", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -376,7 +377,7 @@ describe("formatCron", () => {
 
   describe("list formatting", () => {
     test("minute list", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "list", values: [0, 15, 30, 45] },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -388,7 +389,7 @@ describe("formatCron", () => {
     });
 
     test("hour list", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "list", values: [9, 12, 15] },
         dayOfMonth: { type: "any" },
@@ -400,7 +401,7 @@ describe("formatCron", () => {
     });
 
     test("day of month list", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "list", values: [1, 15, 30] },
@@ -414,7 +415,7 @@ describe("formatCron", () => {
 
   describe("step with explicit range", () => {
     test("step with range for minutes", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "step", start: 0, end: 30, step: 5 },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -426,7 +427,7 @@ describe("formatCron", () => {
     });
 
     test("step with range for hours", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "step", start: 9, end: 17, step: 2 },
         dayOfMonth: { type: "any" },
@@ -435,12 +436,12 @@ describe("formatCron", () => {
       };
 
       expect(formatCron(parsedCron)).toBe(
-        "At minute 0 during hours every 2 hours from 9 AM through 5 PM.",
+        "At minute 0 during every 2 hours from 9 AM through 5 PM.",
       );
     });
 
     test("step with range for days of month", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "step", start: 1, end: 15, step: 3 },
@@ -454,7 +455,7 @@ describe("formatCron", () => {
     });
 
     test("step with range for months", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -470,7 +471,7 @@ describe("formatCron", () => {
 
   describe("step unit formatting", () => {
     test("step of 1 uses singular form", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "step", start: null, end: null, step: 1 },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -482,7 +483,7 @@ describe("formatCron", () => {
     });
 
     test("step of 1 for hours", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "step", start: null, end: null, step: 1 },
         dayOfMonth: { type: "any" },
@@ -490,11 +491,11 @@ describe("formatCron", () => {
         dayOfWeek: { type: "any" },
       };
 
-      expect(formatCron(parsedCron)).toBe("At minute 0 during hours every hour.");
+      expect(formatCron(parsedCron)).toBe("At minute 0 during every hour.");
     });
 
     test("step of 1 for days", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "step", start: null, end: null, step: 1 },
@@ -508,7 +509,7 @@ describe("formatCron", () => {
 
   describe("complex combinations", () => {
     test("time with date and weekday", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 30 },
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "exact", value: 15 },
@@ -520,7 +521,7 @@ describe("formatCron", () => {
     });
 
     test("time with weekday range and month", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -534,7 +535,7 @@ describe("formatCron", () => {
     });
 
     test("every minute during specific hours on specific days", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "any" },
         hour: { type: "range", start: 9, end: 17 },
         dayOfMonth: { type: "any" },
@@ -548,7 +549,7 @@ describe("formatCron", () => {
     });
 
     test("step minutes during specific hours", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "step", start: null, end: null, step: 15 },
         hour: { type: "list", values: [9, 12, 15] },
         dayOfMonth: { type: "any" },
@@ -562,7 +563,7 @@ describe("formatCron", () => {
 
   describe("minute at start of hour", () => {
     test("minute 0 of every hour", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -574,7 +575,7 @@ describe("formatCron", () => {
     });
 
     test("minute 0 at specific hour", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "any" },
@@ -588,7 +589,7 @@ describe("formatCron", () => {
 
   describe("every minute during specific hours", () => {
     test("every minute during one hour", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "any" },
         hour: { type: "exact", value: 14 },
         dayOfMonth: { type: "any" },
@@ -600,7 +601,7 @@ describe("formatCron", () => {
     });
 
     test("every minute during multiple hours", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "any" },
         hour: { type: "list", values: [9, 14, 17] },
         dayOfMonth: { type: "any" },
@@ -614,7 +615,7 @@ describe("formatCron", () => {
 
   describe("date without month restrictions", () => {
     test("specific day every month", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "exact", value: 1 },
@@ -626,7 +627,7 @@ describe("formatCron", () => {
     });
 
     test("step day every month", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "step", start: null, end: null, step: 7 },
@@ -640,7 +641,7 @@ describe("formatCron", () => {
 
   describe("month without day restrictions", () => {
     test("every day in specific month", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -652,7 +653,7 @@ describe("formatCron", () => {
     });
 
     test("every day in multiple months", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -664,7 +665,7 @@ describe("formatCron", () => {
     });
 
     test("every day with step months", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "exact", value: 0 },
         hour: { type: "exact", value: 9 },
         dayOfMonth: { type: "any" },
@@ -678,7 +679,7 @@ describe("formatCron", () => {
 
   describe("defensive tests", () => {
     test("unsupported field type returns field name", () => {
-      const parsedCron = {
+      const parsedCron: object = {
         minute: { type: "unknown", value: 0 },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -686,13 +687,13 @@ describe("formatCron", () => {
         dayOfWeek: { type: "any" },
       };
 
-      const result = formatCron(parsedCron);
+      const result = formatCron(<CronObject>parsedCron);
       expect(result).toBeDefined();
       expect(typeof result).toBe("string");
     });
 
     test("empty or malformed parsed object returns a result", () => {
-      const parsedCron = {
+      const parsedCron: object = {
         minute: {},
         hour: {},
         dayOfMonth: {},
@@ -700,13 +701,13 @@ describe("formatCron", () => {
         dayOfWeek: {},
       };
 
-      const result = formatCron(parsedCron);
+      const result = formatCron(<CronObject>parsedCron);
       expect(result).toBeDefined();
       expect(typeof result).toBe("string");
     });
 
     test("extreme values in ranges are handled", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "range", start: 0, end: 59 },
         hour: { type: "any" },
         dayOfMonth: { type: "any" },
@@ -720,7 +721,7 @@ describe("formatCron", () => {
     });
 
     test("complex combination returns some description", () => {
-      const parsedCron = {
+      const parsedCron: CronObject = {
         minute: { type: "range", start: 0, end: 30 },
         hour: { type: "list", values: [9, 12, 15] },
         dayOfMonth: { type: "any" },

@@ -1,11 +1,15 @@
-import listJoin from "./utils/listFormat.js";
-import formatSentence from "./utils/formatSentence.js";
+import listJoin from "./utils/listFormat.ts";
+import formatSentence from "./utils/formatSentence.ts";
+import type { CronField } from "./parseField.ts";
+import type { CronObject } from "./parseCron.ts";
+
+type FormatField = (arg: number) => string;
 
 /**
  * Month names indexed 1-12.
  * @type {string[]}
  */
-const months = [
+const months: string[] = [
   "January",
   "February",
   "March",
@@ -24,14 +28,22 @@ const months = [
  * Weekday names indexed 0-6.
  * @type {string[]}
  */
-const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const weekdays: string[] = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 /**
  * Converts a month number to its English name.
  * @param {number} monthNum
  * @returns {string}
  */
-const getMonthName = (monthNum) => months[monthNum - 1];
+const getMonthName = (monthNum: number): string => months[monthNum - 1];
 
 /**
  * Converts a weekday number to its English name.
@@ -39,14 +51,14 @@ const getMonthName = (monthNum) => months[monthNum - 1];
  * @param {number} weekNum
  * @returns {string}
  */
-const getWeekdayName = (weekNum) => weekdays[weekNum === 7 ? 0 : weekNum];
+const getWeekdayName = (weekNum: number): string => weekdays[weekNum === 7 ? 0 : weekNum];
 
 /**
  * Converts a number into its ordinal form.
  * @param {number} number
  * @returns {string}
  */
-const formatOrdinal = (number) => {
+const formatOrdinal = (number: number): string => {
   let suffix = "th";
 
   if (number % 100 < 11 || number % 100 > 13) {
@@ -67,7 +79,7 @@ const formatOrdinal = (number) => {
  * @param {number} hour
  * @returns {number}
  */
-const formatHour = (hour) => {
+const formatHour = (hour: number): number => {
   if (hour === 0) {
     return 12;
   }
@@ -84,9 +96,9 @@ const formatHour = (hour) => {
  * @param {number} hour
  * @returns {string}
  */
-const formatClockHour = (hour) => {
+const formatClockHour = (hour: number): string => {
   const hourValue = formatHour(hour);
-  const meridian = hour < 12 ? "AM" : "PM";
+  const meridian: "AM" | "PM" = hour < 12 ? "AM" : "PM";
 
   return `${hourValue} ${meridian}`;
 };
@@ -96,15 +108,15 @@ const formatClockHour = (hour) => {
  * @param {number} minute
  * @returns {string}
  */
-const formatMinute = (minute) => String(minute).padStart(2, "0");
+const formatMinute = (minute: number): string => String(minute).padStart(2, "0");
 
 /**
  * Returns the plural form of a field name.
  * @param {string} fieldName
  * @returns {string}
  */
-const getPluralFieldName = (fieldName) => {
-  const pluralNames = {
+const getPluralFieldName = (fieldName: string): string => {
+  const pluralNames: Record<string, string> = {
     minute: "minutes",
     hour: "hours",
     day: "days",
@@ -117,12 +129,12 @@ const getPluralFieldName = (fieldName) => {
 
 /**
  * Formats a field according to its parsed type.
- * @param {Object} field - The parsed field object containing type and value(s)
+ * @param {CronField} field - The parsed field object containing type and value(s)
  * @param {string} fieldName - The name of the field (e.g., "minute", "hour", "day")
- * @param {Function} fn - Optional formatting function to apply to values
+ * @param {FormatField} fn - Optional formatting function to apply to values
  * @returns {string}
  */
-const formatField = (field, fieldName, fn = String) => {
+const formatField = (field: CronField, fieldName: string, fn: FormatField = String): string => {
   switch (field.type) {
     case "any":
       return "";
@@ -130,7 +142,7 @@ const formatField = (field, fieldName, fn = String) => {
     case "exact":
       return fn(field.value);
 
-    case "range":
+    case "range": {
       // Fix formatting of 0-7 in weekday
       // returning `Sunday through Sunday`
       const startFormatted = fn(field.start);
@@ -139,6 +151,7 @@ const formatField = (field, fieldName, fn = String) => {
         return startFormatted;
       }
       return `${startFormatted} through ${endFormatted}`;
+    }
 
     case "list":
       return listJoin(field.values.map((value) => fn(value)));
@@ -146,8 +159,11 @@ const formatField = (field, fieldName, fn = String) => {
     case "step":
       return formatStep(field.start, field.end, field.step, fieldName, fn);
 
-    default:
-      return fieldName;
+    default: {
+      let unreachable: never;
+      unreachable = field;
+      return unreachable;
+    }
   }
 };
 
@@ -157,15 +173,21 @@ const formatField = (field, fieldName, fn = String) => {
  * @param {number|null} end - The ending value of the step range
  * @param {number} step - The step interval value
  * @param {string} fieldName - The name of the field being stepped over
- * @param {Function} fn - Optional formatting function to apply to start/end values
+ * @param {FormatField} fn - Optional formatting function to apply to start/end values
  * @returns {string}
  */
-const formatStep = (start, end, step, fieldName, fn = String) => {
+const formatStep = (
+  start: number | null,
+  end: number | null,
+  step: number,
+  fieldName: string,
+  fn: FormatField = String,
+): string => {
   const unit = step === 1 ? fieldName : getPluralFieldName(fieldName);
 
   // If the step is one, we omit out the value
   // Eg: 1 minute -> every minute
-  let result = `every ${step === 1 ? "" : `${step} `}${unit}`;
+  let result: string = `every ${step === 1 ? "" : `${step} `}${unit}`;
 
   if (start !== null && end !== null) {
     result += ` from ${fn(start)} through ${fn(end)}`;
@@ -176,11 +198,11 @@ const formatStep = (start, end, step, fieldName, fn = String) => {
 
 /**
  * Formats the minute and hour fields.
- * @param {Object} minute
- * @param {Object} hour
+ * @param {CronField} minute
+ * @param {CronField} hour
  * @returns {string}
  */
-const formatTime = (minute, hour) => {
+const formatTime = (minute: CronField, hour: CronField): string => {
   // A specific hour and minute.
   if (minute.type === "exact" && hour.type === "exact") {
     const hourValue = formatClockHour(hour.value);
@@ -211,13 +233,23 @@ const formatTime = (minute, hour) => {
   // - "any": applies to every hour
   // - "exact": a specific hour (e.g., "the 2 PM hour")
   // - other types (list, step, range): multiple hours (e.g., "hours 9 AM, 12 PM and 3 PM")
-  const hourDescription =
-    hour.type === "any"
-      ? "every hour"
-      : hour.type === "exact"
-        ? `the ${formatClockHour(hour.value)} hour`
-        : // For lists, steps, ranges and stepped-range hour values
-          `hours ${formatField(hour, "hour", formatClockHour)}`;
+
+  let hourDescription: string;
+
+  switch (hour.type) {
+    case "any":
+      hourDescription = "every hour";
+      break;
+    case "exact":
+      hourDescription = `the ${formatClockHour(hour.value)} hour`;
+      break;
+    case "step":
+      hourDescription = formatField(hour, "hour", formatClockHour);
+      break;
+    default:
+      hourDescription = `hours ${formatField(hour, "hour", formatClockHour)}`;
+      break;
+  }
 
   // Every minute during a particular hour or set of hours.
   if (minute.type === "any") {
@@ -246,11 +278,11 @@ const formatTime = (minute, hour) => {
 
 /**
  * Formats the day-of-month and month fields together.
- * @param {Object} dayOfMonth
- * @param {Object} month
+ * @param {CronField} dayOfMonth
+ * @param {CronField} month
  * @returns {string}
  */
-const formatDate = (dayOfMonth, month) => {
+const formatDate = (dayOfMonth: CronField, month: CronField): string => {
   const hasDay = dayOfMonth.type !== "any";
   const hasMonth = month.type !== "any";
 
@@ -291,10 +323,10 @@ const formatDate = (dayOfMonth, month) => {
 
 /**
  * Formats the day-of-week field.
- * @param {Object} week
+ * @param {CronField} week
  * @returns {string}
  */
-const formatWeek = (week) => {
+const formatWeek = (week: CronField): string => {
   if (week.type === "any") {
     return "";
   }
@@ -304,14 +336,14 @@ const formatWeek = (week) => {
 
 /**
  * Converts a parsed cron expression into readable English.
- * @param {Object} parsedCron
+ * @param {CronObject} parsedCron
  * @returns {string}
  */
-const formatCron = (parsedCron) => {
+const formatCron = (parsedCron: CronObject): string => {
   const { minute, hour, dayOfMonth, month, dayOfWeek } = parsedCron;
 
   // Special case: all fields are unrestricted.
-  const fields = Object.values(parsedCron);
+  const fields: CronField[] = Object.values(parsedCron);
 
   if (fields.every((field) => field.type === "any")) {
     return formatSentence("every minute");
@@ -327,7 +359,7 @@ const formatCron = (parsedCron) => {
   }
 
   // Combine the phrases without adding punctuation to individual helpers.
-  let result = time;
+  let result: string = time;
 
   if (date !== "") {
     result += ` ${date}`;
