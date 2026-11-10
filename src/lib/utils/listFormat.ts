@@ -13,8 +13,8 @@ type ListItem = string | number | null | undefined;
  * @return {string}
  */
 const ListFormat = (list: ListItem[]): string => {
-  const listString = list.filter((item: ListItem) => item != null).map(String);
-  const uniqueList = [...new Set(listString)];
+  const listString: string[] = list.filter((item: ListItem): boolean => item != null).map(String);
+  const uniqueList: string[] = [...new Set(listString)];
   return LIST_FORMAT.format(uniqueList);
 };
 
