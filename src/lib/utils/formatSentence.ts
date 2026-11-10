@@ -3,7 +3,7 @@
  * @param string The string to format into a sentence
  * @return {string}
  */
-const formatSentence = (string) => {
+const formatSentence = (string: string): string => {
   const str = string.trim();
   const firstLetter = str[0];
   const suffix = str.endsWith(".") ? "" : ".";
