@@ -1,4 +1,5 @@
-import ListFormat from "./listFormat.js";
+import ListFormat from "./listFormat.ts";
+import { describe, test, expect, expectTypeOf } from "vite-plus/test";
 
 describe("ListFormat", () => {
   // Test the output and return type of the listFormat function

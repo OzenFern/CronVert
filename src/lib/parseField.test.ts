@@ -1,4 +1,5 @@
-import parseField from "./parseField.js";
+import parseField from "./parseField.ts";
+import { describe, test, expect } from "vite-plus/test";
 
 describe("parseField", () => {
   describe("valid field types", () => {

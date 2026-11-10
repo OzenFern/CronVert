@@ -1,4 +1,5 @@
-import cronToText from "./cronToText.js";
+import cronToText from "./cronToText.ts";
+import { describe, test, expect } from "vite-plus/test";
 
 describe("cronToText", () => {
   describe("end-to-end conversions", () => {

@@ -1,4 +1,5 @@
-import formatSentence from "./formatSentence.js";
+import formatSentence from "./formatSentence.ts";
+import { describe, test, expect, expectTypeOf } from "vite-plus/test";
 
 // Test the output and return type of the formatSentence function
 describe("Test Sentence conversion", () => {

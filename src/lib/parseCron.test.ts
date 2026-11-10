@@ -1,4 +1,5 @@
-import parseCron from "./parseCron.js";
+import parseCron from "./parseCron.ts";
+import { describe, test, expect } from "vite-plus/test";
 
 describe("parseCron", () => {
   describe("valid CRON expressions", () => {

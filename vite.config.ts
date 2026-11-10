@@ -41,7 +41,7 @@ export default defineConfig({
   },
   plugins: lazyPlugins(() => [react({ compiler: true }), tailwindcss()]),
   test: {
-    globals: true,
+    globals: false,
     environment: "node",
   },
   define: {

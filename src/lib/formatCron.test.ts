@@ -1,4 +1,5 @@
-import formatCron from "./formatCron.js";
+import formatCron from "./formatCron.ts";
+import { describe, test, expect } from "vite-plus/test";
 
 describe("formatCron", () => {
   describe("basic schedules", () => {
