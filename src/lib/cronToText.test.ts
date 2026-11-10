@@ -190,7 +190,7 @@ describe("cronToText", () => {
       expect(cronToText("*/5 */2 */3 */4 */5")).toEqual({
         success: true,
         value:
-          "Every 5 minutes during hours every 2 hours every 3 days in every 4 months, every 5 days of the week.",
+          "Every 5 minutes during every 2 hours every 3 days in every 4 months, every 5 days of the week.",
       });
     });
 

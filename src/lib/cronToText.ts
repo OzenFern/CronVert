@@ -1,12 +1,12 @@
-import parseCron from "./parseCron.js";
-import formatCron from "./formatCron.js";
+import parseCron, { type Result } from "./parseCron.ts";
+import formatCron from "./formatCron.ts";
 
 /**
  * Converts cron into meaningful English text, and returns the answer as an object
  * @param cron
- * @return {{success: boolean, value: string}|{success: boolean, error: string}|Array|*|{success: boolean, value: {minute: *, hour: *, dayOfMonth: *, month: *, dayOfWeek: *}}}
+ * @return {Result<string>}
  */
-const cronToText = (cron) => {
+const cronToText = (cron: string): Result<string> => {
   const parsed = parseCron(cron);
 
   if (!parsed.success) {
