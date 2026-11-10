@@ -27,6 +27,7 @@ export default defineConfig({
         },
       ],
       "vite-plus/prefer-vite-plus-imports": "error",
+      "no-case-declarations": "deny",
     },
     options: {
       typeAware: true,
