@@ -7,7 +7,7 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -19,9 +19,6 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    # Deploy on manual dispatch, version tag push, or successful CI run on main
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
 
     environment:
       name: github-pages
