@@ -7,7 +7,7 @@
 Validate standard five-field cron expressions and translate them into clear, human-readable descriptions, entirely in your browser.
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Vite+](https://img.shields.io/badge/Vite%2B-1.5-646CFF?logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
 ![Tested with Vitest](https://img.shields.io/badge/tested_with-Vitest-6E9F18?logo=vitest&logoColor=white)
 ![GitHub Pages](https://img.shields.io/badge/deployed_on-GitHub_Pages-222222?logo=github&logoColor=white)
@@ -26,7 +26,7 @@ Validate standard five-field cron expressions and translate them into clear, hum
 - [Supported Syntax](#supported-syntax)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
-- [Available Scripts](#available-scripts)
+- [Commands](#commands)
 - [Project Architecture](#project-architecture)
 - [Testing](#testing)
 - [License](#license)
@@ -46,6 +46,7 @@ CronVert is deployed at **[CronVert](https://ozenfern.github.io/CronVert/)**. It
 - **Live translation:** Descriptions update as you type.
 - **Field-specific validation:** Clear error messages point to the field that is malformed.
 - **One-click copying:** Copy the generated description to your clipboard.
+- **Undo and reset:** Step back through recent edits or restore the default cron expression.
 - **Persistent preferences:** Your last cron input and theme choice are remembered between visits.
 - **Fully client-side:** All parsing and formatting happens locally. No backend, no account.
 
@@ -103,24 +104,25 @@ CronVert supports the standard five-field cron format:
 
 ## Tech Stack
 
-| Technology                                               | Purpose                          |
-| -------------------------------------------------------- | -------------------------------- |
-| [React 19](https://react.dev/)                           | UI development                   |
-| [React Compiler](https://react.dev/learn/react-compiler) | Automatic component optimization |
-| [Vite 8](https://vite.dev/)                              | Dev server and production builds |
-| [Tailwind CSS 4](https://tailwindcss.com/)               | Styling                          |
-| [Lucide React](https://lucide.dev/)                      | Icons                            |
-| [Vitest](https://vitest.dev/)                            | Unit testing                     |
-| [Oxlint](https://oxc.rs/)                                | Linting                          |
-| [Oxfmt](https://oxc.rs/)                                 | Code formatting                  |
-| [React Doctor](https://react.doctor/)                    | React diagnostics                |
+| Technology                                               | Purpose                                                         |
+| -------------------------------------------------------- | --------------------------------------------------------------- |
+| [React 19](https://react.dev/)                           | UI development                                                  |
+| [React Compiler](https://react.dev/learn/react-compiler) | Automatic component optimization                                |
+| [Vite+](https://viteplus.dev/)                           | Unified toolchain (`vp`) for dev, build, lint, format, and test |
+| [TypeScript](https://www.typescriptlang.org/)            | Strict type checking                                            |
+| [Tailwind CSS 4](https://tailwindcss.com/)               | Styling                                                         |
+| [Lucide React](https://lucide.dev/)                      | Icons                                                           |
+| [Vitest](https://vitest.dev/)                            | Unit testing (via `vp test`)                                    |
+| [Oxlint](https://oxc.rs/)                                | Linting                                                         |
+| [Oxfmt](https://oxc.rs/)                                 | Code formatting                                                 |
+| [React Doctor](https://react.doctor/)                    | React diagnostics                                               |
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Node.js 24+](https://nodejs.org/)
-- npm
+- [Node.js 24+](https://nodejs.org/) (or let `vp env` manage it)
+- [Vite+ (`vp`)](https://viteplus.dev/guide/global-cli)
 
 ### Installation
 
@@ -132,34 +134,37 @@ git clone https://github.com/OzenFern/CronVert
 cd CronVert
 
 # 3. Install dependencies
-npm ci
+vp install
 
 # 4. Start the development server
-npm run dev
+vp dev
 ```
 
-Vite prints a local URL you can open in your browser.
+Vite+ prints a local URL you can open in your browser.
 
-## Available Scripts
+## Commands
 
-| Command                                        | Description                             |
-| ---------------------------------------------- | --------------------------------------- |
-| `npm run dev`                                  | Start the development server            |
-| `npm run build`                                | Build for production                    |
-| `npm run preview`                              | Preview the production build locally    |
-| `npm run lint`                                 | Run Oxlint                              |
-| `npm run lint:fix`                             | Automatically fix supported lint issues |
-| `npm run fmt`                                  | Format the code with Oxfmt              |
-| `npm run fmt:check`                            | Check code formatting                   |
-| `npm test -- --run`                            | Run the test suite once                 |
-| `npm test -- --run src/lib/parseField.test.js` | Run tests for a single file             |
-| `npm run doctor`                               | Run React Doctor diagnostics            |
+CronVert uses [Vite+](https://viteplus.dev/) (`vp`), a unified toolchain that manages Node.js, the package manager, dev server, linting, formatting, type checking, and tests. Run a `package.json` script with `vpr <script>`.
+
+| Command                                  | Description                              |
+| ---------------------------------------- | ---------------------------------------- |
+| `vp dev`                                 | Start the development server             |
+| `vp build`                               | Build for production                     |
+| `vp preview`                             | Preview the production build locally     |
+| `vp lint`                                | Run Oxlint                               |
+| `vp lint --fix`                          | Automatically fix supported lint issues  |
+| `vp fmt`                                 | Format the code with Oxfmt               |
+| `vp fmt --check`                         | Check code formatting                    |
+| `vp check`                               | Run formatting, linting, and type checks |
+| `vp test run`                            | Run the test suite once                  |
+| `vp test run src/lib/parseField.test.ts` | Run tests for a single file              |
+| `vpr doctor`                             | Run React Doctor diagnostics             |
 
 ## Project Architecture
 
 CronVert separates **understanding** a cron expression from **describing** it. The parser turns cron syntax into a structured object (an AST), and the formatter turns that object into text. The formatter never sees `*`, `-`, `,`, or `/`, and the parser never writes English.
 
-This keeps the core logic independent of the React UI and easy to test.
+This keeps the core logic independent of the React UI and easy to test. The codebase is written in strict TypeScript, so the parser, formatter, and component contracts are checked at compile time.
 
 ### Conversion flow
 
@@ -187,10 +192,10 @@ flowchart TD
 
 | Module          | Responsibility                                              |
 | --------------- | ----------------------------------------------------------- |
-| `parseField.js` | Parses and validates a single cron field                    |
-| `parseCron.js`  | Validates the full five-field expression and builds the AST |
-| `formatCron.js` | Converts the AST into a human-readable description          |
-| `cronToText.js` | Main entry point that connects parsing and formatting       |
+| `parseField.ts` | Parses and validates a single cron field                    |
+| `parseCron.ts`  | Validates the full five-field expression and builds the AST |
+| `formatCron.ts` | Converts the AST into a human-readable description          |
+| `cronToText.ts` | Main entry point that connects parsing and formatting       |
 
 ### The AST at a glance
 
@@ -213,7 +218,7 @@ The full specification lives in [`docs/cron-ast.md`](docs/cron-ast.md).
 Parsing and conversion logic is tested independently of the UI with Vitest. Tests cover supported syntax, field validation, malformed expressions, and edge cases.
 
 ```bash
-npm test -- --run
+vp test run
 ```
 
 ## License
