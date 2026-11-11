@@ -4,11 +4,11 @@ import { CheckCheck, Copy } from "lucide-react";
 
 type CopyButtonProps = {
   text: string;
-  toCopy?: string | null;
+  toCopy: string;
+  isDisabled?: boolean;
 };
 
-const CopyButton = ({ text, toCopy }: CopyButtonProps) => {
-  const isDisabled = toCopy == null;
+const CopyButton = ({ text, toCopy, isDisabled }: CopyButtonProps) => {
   const [isCopied, setCopied] = useState(false);
 
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);

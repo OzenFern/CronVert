@@ -82,7 +82,7 @@ const App = () => {
           />
         </LabelContainer>
         <div className="mt-2 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <CopyButton text="Description" toCopy={text} />
+          <CopyButton text="Description" toCopy={text} isDisabled={!result.success} />
           <Button
             click={undo}
             icon={Undo}
